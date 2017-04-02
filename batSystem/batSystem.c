@@ -13,8 +13,6 @@ Lab 07
 #include <pthread.h>
 
 
-
-
 struct BAT {
     int id;
     char dir;
@@ -40,7 +38,6 @@ struct BATMAN {
 };
 
 //Char to Int
-
 int dirIndex(char c) {
     switch (tolower(c)) {
         case 'n':
@@ -56,6 +53,7 @@ int dirIndex(char c) {
     }
 }
 
+//Int to Char
 char indexDir(int val) {
     switch (val) {
         case 0: 
@@ -71,7 +69,7 @@ char indexDir(int val) {
     }
 }
 
-//Modulus function that always returns >= 0
+//positive mod
 int mod(int a, int b) {
     return (a + b) % b;
 }
@@ -188,7 +186,7 @@ void* batfun(void* arg) {
     pthread_exit(NULL);
 }
 
-void testcase(const char* testcase) {
+void testingFun(const char* testcase) {
     printf("tesing input: %s\n", testcase);
     struct BATMAN man;
 
@@ -237,10 +235,16 @@ void testcase(const char* testcase) {
 }
 
 int main(int argc, char * argv[]) {
-    if (argc != 2) {
-        printf("Invalid argument\n");
-    } else {
-        testcase("neswwe");
+    if (argc < 2) {
+        printf("Invalid argument, using test case\n");
+        testingFun("neswwe");
+    } 
+    if (argc > 1) {
+        testingFun(argv[1]);
     }
+    //else {
+        //testingFun(*argv);
+    //    testingFun("neswwe");
+    //}
     return 0;
 }
