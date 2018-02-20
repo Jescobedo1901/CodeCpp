@@ -57,8 +57,15 @@ class dataNode {
             return values[attr];
         }
         
+        double getAttr(int attr) const {
+            return values[attr];
+        }
+        
         double setAttr(int attr, double val) {
             values[attr] = val;
+        }
+        int valueSize() {
+            return values.size();
         }
 };
 
@@ -97,7 +104,7 @@ class dataNode {
 
 //Declarations -----------
 
-double unitDistance(dataNode unit);
+double unitDistance(const dataNode& unit1, const dataNode& unit2);
 double nearestNeighbor(vector<dataNode> train, dataNode unit, int k);
 double testKValue(vector<dataNode> train, vector<dataNode> test, int k);
 
@@ -131,9 +138,69 @@ void createDataSets(vector<dataNode> & train,
     //cout << "I've finished creating data Sets!" << endl;
 }
 
+void normalizeAttributes(double min0, double min1, double max0, double max1,
+                        vector<dataNode> & set) {
+    double range0 = max0-min0;
+    double range1 = max1-min1;
+    
+    for (int i = 0; i < set.size(); i++) {
+        double temp0 = (set[i].getAttr(0)-min0)/range0;
+        double temp1 = (set[i].getAttr(1)-min1)/range1;
+        set[i].setAttr(0, temp0); 
+        set[i].setAttr(1, temp1);
+    }
+}
+
 double testKValue(vector<dataNode> train, 
                     vector<dataNode> test, int k) {
     //cout << "Hello I'm inside the TestKValue function" << endl;
+    int attramount = train[0].valueSize();
+    //vector<double> minimums;
+    //vector<double> maximums;
+    
+    //for (int i = 0; i<attramount; i++) {
+        
+    //}
+    double min0 = train[0].getAttr(0);
+    double min1 = train[0].getAttr(1);
+    double max0 = train[0].getAttr(0);
+    double max1 = train[0].getAttr(1);
+    for (int i = 0; i < train.size(); i++) {
+        double temp0 = train[i].getAttr(0);
+        double temp1 = train[i].getAttr(1);
+        if (min0 > temp0) {
+            min0 = temp0;
+        }
+        if (min1 > temp1) {
+            min1 = temp1;
+        }
+        if (max0 < temp0) {
+            max0 = temp0;
+        }
+        if (max1 < temp1) {
+            max1 = temp1;
+        }
+        
+    }
+    for (int i = 0; i < test.size(); i++) {
+        double temp0 = test[i].getAttr(0);
+        double temp1 = test[i].getAttr(1);
+        if (min0 > temp0) {
+            min0 = temp0;
+        }
+        if (min1 > temp1) {
+            min1 = temp1;
+        }
+        if (max0 < temp0) {
+            max0 = temp0;
+        }
+        if (max1 < temp1) {
+            max1 = temp1;
+        }
+        
+    }
+    normalizeAttributes(min0, min1, max0, max1, train);
+    normalizeAttributes(min0, min1, max0, max1, test);
     double accuracy = 0;
     int size = test.size();
     //Temp vector to hold supposed label values
@@ -154,8 +221,6 @@ double testKValue(vector<dataNode> train,
 
 double nearestNeighbor(vector<dataNode> train, dataNode unit, int k) {
     //cout << "Hell I'm inside the NN function" << endl;
-    double distanceOfUnit = unitDistance(unit);
-    double distanceOfTrain = 0;
     double tempDistance = 0;
     double attrCheck = 0;
     double attr = 0;
@@ -167,8 +232,7 @@ double nearestNeighbor(vector<dataNode> train, dataNode unit, int k) {
         double minDistanceVal = INTMAX_MAX;
         int minDistancePos = 0;
         for (int j = 0; j < train.size(); j++) {
-            distanceOfTrain = unitDistance(train[j]);
-            tempDistance = abs(distanceOfTrain-distanceOfUnit);
+            tempDistance = unitDistance(train[j], unit);
             if (tempDistance < minDistanceVal) {
                 minDistanceVal = tempDistance;
                 minDistancePos = j;
@@ -189,12 +253,25 @@ double nearestNeighbor(vector<dataNode> train, dataNode unit, int k) {
     return 0;
 }
 
-double unitDistance(dataNode unit) {
-    //cout << "Hello Distance function" << endl;
-    double distance = sqrt((unit.getAttr(0)*unit.getAttr(0) +
-                        unit.getAttr(1)*unit.getAttr(1)));
-    //cout << "leaving distance" << endl;
+double unitDistance(const dataNode& left, const dataNode& right) {
+    auto x1 = left.getAttr(0), x2 = right.getAttr(0), y1 = left.getAttr(1), y2 = right.getAttr(1);
+    double distance = sqrt( (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 * y2));
     return distance;
+}
+
+
+void unitTest(vector<dataNode> originalSet, vector<dataNode> test, int k) {
+    double accuracy = 0;
+    int size = test.size();
+    //Temp vector to hold supposed label values
+    vector<double> temp;
+    
+    for (int i = 0; i < size; i++) {
+        temp.push_back(nearestNeighbor(originalSet, test[i], k));
+    }
+    for (int i = 0; i < size; i++) {
+        cout << "Test case 1, Label: " << temp[i] << endl;
+    }
 }
 #endif /* DATACLASS_H */
 

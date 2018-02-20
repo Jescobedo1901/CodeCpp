@@ -106,7 +106,29 @@ int main(int argc, char** argv) {
     {3.4, 5.4, convertLabelToDouble("I. virginica")},
     {3, 5.1, convertLabelToDouble("I. virginica")} };
     
-    int epochs = 100000;
+    double matrixTest[20][3] = {    
+    {2.6, 4.4, convertLabelToDouble("I. versicolor")},
+    {3, 4.6, convertLabelToDouble("I. versicolor")},
+    {2.6, 4, convertLabelToDouble("I. versicolor")},
+    {2.3, 3.3, convertLabelToDouble("I. versicolor")},
+    {2.7, 4.2, convertLabelToDouble("I. versicolor")},
+    {3, 4.2, convertLabelToDouble("I. versicolor")},
+    {2.9, 4.2, convertLabelToDouble("I. versicolor")},
+    {2.9, 4.3, convertLabelToDouble("I. versicolor")},
+    {2.5, 3, convertLabelToDouble("I. versicolor")},
+    {2.8, 4.1, convertLabelToDouble("I. versicolor")},
+    {3.3, 6, convertLabelToDouble("I. virginica")},
+    {2.7, 5.1, convertLabelToDouble("I. virginica")},
+    {3, 5.9, convertLabelToDouble("I. virginica")},
+    {2.9, 5.6, convertLabelToDouble("I. virginica")},
+    {3, 5.8, convertLabelToDouble("I. virginica")},
+    {3, 6.6, convertLabelToDouble("I. virginica")},
+    {2.5, 4.5, convertLabelToDouble("I. virginica")},
+    {2.9, 6.3, convertLabelToDouble("I. virginica")},
+    {2.5, 5.8, convertLabelToDouble("I. virginica")},
+    {3.6, 6.1, convertLabelToDouble("I. virginica")} };
+    
+    int epochs = 1000;
     int accPos = 0;
     int attrAmount = 3;
     int totalSize = 80;
@@ -159,11 +181,21 @@ int main(int argc, char** argv) {
             max = i;
         }
     }
-    cout << "Best accuracy found when K = " << 2*max+1 << endl;
+    int k = 2*max+1;
+    cout << "Best accuracy found when K = " << k << endl;
     cout << "With accuracy of " << kAccuracy[max] << "%" << endl;
     
-    //delete training;
-    //delete testing;
+    cout << "Now finding the Labels for the testing set" << endl;
+    vector<dataNode> test;
+    for (int i = 0; i < 20; i++) {
+        dataNode temp(3);
+        for (int j = 0; j < attrAmount; j++) {
+            temp.setAttr(j,(matrixTest[i][j]));
+        }
+        test.push_back(temp);
+    }
+    
+    unitTest(originalSet, test, k);
     
     
     return 0;
