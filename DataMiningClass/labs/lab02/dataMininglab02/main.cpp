@@ -151,26 +151,18 @@ int main(int argc, char** argv) {
         tempAccuracy = 0;
         kAccuracy.push_back(tempAccuracy);
         for (int i = 0; i < epochs; i++) {
-            //cout << "Hello I'm inside the epoch loop" << endl;
             //Divide data into two sets 
             createDataSets(training, testing, originalSet, trainingSize, testingSize);
             tempAccuracy = testKValue(training, testing, k);
             
             //Clear the temporary sets for new randomized sets
-            //for (int x = 0; x < trainingSize; x++) {
-                //training.erase(training.begin(), training.end());
                 training.clear();
-            //}
-            //for (int x = 0; x < testingSize; x++) {
-                //testing.erase(testing.begin(), testing.end());
                 testing.clear();
-            //}
             //Summation of all accuracy
             kAccuracy[accPos] += tempAccuracy;
         }
         //Find the mean accuracy value for each k
         kAccuracy[accPos] = kAccuracy[accPos]/epochs;
-        
         cout << "K is: " << k << ", Accuracy = " << kAccuracy[accPos] << "%" << endl;
         accPos++;
     }

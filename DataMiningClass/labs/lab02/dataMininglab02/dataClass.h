@@ -118,6 +118,14 @@ double convertLabelToDouble(string label) {
     return 0.0;
 }
 
+void convertDtoL(double label) {
+    if (label == 1.0) {
+        cout << "I. versicolor";
+    } else {
+        cout << "I. virginica";
+    }
+}
+
 void createDataSets(vector<dataNode> & train, 
                     vector<dataNode> & test, 
                     vector<dataNode> original,
@@ -270,7 +278,10 @@ void unitTest(vector<dataNode> originalSet, vector<dataNode> test, int k) {
         temp.push_back(nearestNeighbor(originalSet, test[i], k));
     }
     for (int i = 0; i < size; i++) {
-        cout << "Test case 1, Label: " << temp[i] << endl;
+        double val = temp[i];
+        cout << "Test case "<< i+1 << ", Label: ";
+        convertDtoL(val); 
+        cout << endl;
     }
 }
 #endif /* DATACLASS_H */
